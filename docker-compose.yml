@@ -1,0 +1,171 @@
+version: "3.1"
+
+services:
+
+  balancer:
+    container_name: 'balancer'
+    build: ./balancer
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./logs/balancer:/var/logs
+    links:
+      - backend.nginx
+#      - front
+    networks:
+      - paymentsnet
+#    command: "nginx -g 'daemon off;'"
+
+  backend.nginx:
+    container_name: 'backend.nginx'
+    build: ./laravel/nginx
+    ports:
+      - "${LARAVEL_APP_PORT}"
+    volumes:
+      - ./logs/laravel:/var/logs
+    links:
+      - backend.php
+    networks:
+      - paymentsnet
+
+  backend.php:
+#      image: malgrat/phpfpm:rdkafka_composer_pinba_pdo
+      container_name: 'backend.php'
+      build: ./laravel/php
+      extra_hosts:
+       - "localhost:172.17.0.1"
+      links:
+       - redis-cache
+       - postgres
+#       - rabbitmq
+      volumes:
+       - "${LARAVEL_APP_PATH}"
+#       - app-volume:/app/storage/proxy-data
+      working_dir: /app
+      networks:
+      - paymentsnet
+#  mysql:
+#      #image: malgrat/mysql_percona:task
+#      build: ./mysql
+#      container_name: 'mysql'
+#      environment:
+#       MYSQL_ROOT_PASSWORD: 123456
+#       MYSQL_USER: realty
+#       MYSQL_PASSWORD: 123456
+#       MYSQL_DATABASE: realty_tasks
+##      extra_hosts:
+##       - "dbhost:172.17.0.5"
+#      ports:
+#       - "${MYSQL_REALTY_PORT}"
+#      volumes:
+#       - "${MYSQL_REALTY_DATA}"
+#       - ./mysql/my.cnf:/etc/mysql/my.cnf
+#      command:
+#       - '--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci'
+#      networks:
+#       - main
+
+  postgres:
+    container_name: 'postgres'
+    image: 'bitnami/postgresql:latest'
+    restart: "always"
+    ports:
+      - "${POSTGRESQL_PORT}"
+    volumes:
+      - "${POSTGRESQL_DATA}"
+      - "${POSTGRESQL_DATA_PATH}"
+    environment:
+#      - POSTGRESQL_REPLICATION_MODE=master
+#      - POSTGRESQL_REPLICATION_USER=repl_user
+#      - POSTGRESQL_REPLICATION_PASSWORD=password
+      - POSTGRESQL_USERNAME=root
+      - POSTGRESQL_PASSWORD=root
+      - POSTGRESQL_DATABASE=payments
+    networks:
+      - paymentsnet
+
+#  mongo:
+#      container_name: 'mongo'
+#      image: mongo
+#      ports:
+#       - "27017:27017"
+#      volumes:
+#       - /data/mongodb/db:/data/db
+#      networks:
+#       - main
+
+#  memcached:
+#      container_name: 'memcached'
+#      image: memcached
+#      ports:
+#       - "11211:11211"
+#      networks:
+#      - main
+
+  redis-cache:
+      container_name: 'redis-cache'
+      image: redis
+      volumes:
+        - "${REDIS_DATA}:/data"
+      ports:
+        - "${REDIS_PORT}"
+      networks:
+      - paymentsnet
+
+  redis-cache-commander:
+      container_name: redis-cache-commander
+      hostname: redis-commander
+      image: rediscommander/redis-commander:latest
+      restart: always
+      environment:
+       - REDIS_HOSTS=local:redis:6379
+      ports:
+       - 8081:8081
+      networks:
+       - paymentsnet
+
+#  rabbitmq:
+#      container_name: 'rabbitmq'
+#      image: rabbitmq:3.6.1-management
+#      ports:
+#       - "15672:15672"
+#       - "5672:5672"
+#      networks:
+#      - main
+ 
+#  front:
+#      build: ./front
+#      container_name: "front"
+#      ports:
+#       - "${FRONT_PORT}"
+#      links:
+#       - mongo
+#      volumes :
+#       - /var/www/pac.me:/app
+#      networks:
+#      - main
+#
+#  webserver:
+#      build: ./webserver
+#      container_name: "webserver"
+#      ports:  # ?
+#       - "8080:8080"
+#      links:
+#       - mongo
+#      volumes :
+#       - /var/www/pac.me:/app
+#       - app-volume:/app/casper/proxy-data
+#      networks:
+#      - main
+
+
+networks:
+  paymentsnet:
+    driver: bridge
+
+volumes:
+     app-volume:
+
+
+
