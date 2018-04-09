@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Service\Account\Models\UserModel;
 use App\Service\Account\Models\Wallet;
 use App\Service\ApiMethod\AccountApiMethod;
+use App\Service\ApiMethod\StatApiMethod;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -132,5 +133,18 @@ class AccountController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function report(StatApiMethod $statApiMethod, Request $request)
+    {
+        if ($statApiMethod->validateRequest($request)) {
+            $statApiMethod->processRequest();
+        }
+
+        return response()->json([
+            'status' => $statApiMethod->getStatus(),
+            'case' => $statApiMethod->getCase(),
+            'response' => $statApiMethod->getMessage()
+        ]);
     }
 }

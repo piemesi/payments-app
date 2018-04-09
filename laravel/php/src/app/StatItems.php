@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Stat extends Model
+class StatItems extends Model
 {
     //
 }

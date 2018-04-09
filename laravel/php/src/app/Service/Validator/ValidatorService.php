@@ -6,10 +6,12 @@ use App\Service\Account\Models\City;
 use App\Service\Account\Models\Country;
 use App\Service\ApiMethod\AccountApiMethod;
 use App\Service\ApiMethod\CurrencyRateApiMethod;
+use App\Service\ApiMethod\StatApiMethod;
 use App\Service\ApiMethod\TransactionApiMethod;
 use App\Service\Currency\Models\Currency;
 use App\Service\Transaction\Models\Transaction;
 use App\Service\Transaction\TransactionService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -151,6 +153,26 @@ class ValidatorService implements IValidator
                     Transaction::TRANSACTION_TYPE_DEPOSIT;
 
                 Log::debug('>>>>', [$requestData, $request->all()]);
+                break;
+
+            case StatApiMethod::getApiMethodName():
+
+                $this->checkObligatoryFields(
+                    StatApiMethod::METHOD_OBLIGATORY_FIELDS,
+                    $request->keys()
+                );
+
+                $requestData = $this->setDefaultValues(
+                    StatApiMethod::METHOD_DEFAULT_VALUES,
+                    $requestData
+                );
+
+                $requestData['date_from'] = $requestData['date_from'] ?? Carbon::now()->addMonths(-3)->toDateString();
+                $requestData['date_to'] = $requestData['date_to'] ?? Carbon::now()->toDateString();
+
+
+//                $requestData['email'] = ;
+                Log::debug('>>>>', [$requestData, $request->all(), $request->query()]);
                 break;
 
         }

@@ -30,3 +30,4 @@ Route::post('/transaction', "ApiController@transaction")->name('transaction');
 
 Route::apiResource('account', 'AccountController');
 Route::get('account/{email}/check', 'AccountController@checkUserByEmail')->name('check-user-by-email');
+Route::get('account/{email}/report', 'AccountController@report')->name('report');
