@@ -2,7 +2,6 @@
 
 namespace App\Service\Convertor;
 
-use App\Service\Currency\Models\CurrencyRate;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -12,8 +11,6 @@ class ConvertorService
 
     public function __construct()
     {
-
-
         $lastRates = DB::select("
                 SELECT *
                 FROM (
@@ -28,7 +25,7 @@ class ConvertorService
             $this->lastRates[$value->currency_from] = $value;
         }
 
-        Log::debug('LR',[$this->lastRates]);
+        Log::debug('LR', [$this->lastRates]);
     }
 
     public function convert($amount, $from, $to)
@@ -37,10 +34,15 @@ class ConvertorService
         if (!isset($this->lastRates[$from]) || !isset($this->lastRates[$to])) return null;
 
         $USDEquivalent = ($amount / ($this->lastRates[$from]->rate / pow(10, $this->lastRates[$from]->exponent)));
-        $TOEquivalent = $USDEquivalent *  ($this->lastRates[$to]->rate / pow(10, $this->lastRates[$to]->exponent));
+        $TOEquivalent = $USDEquivalent * ($this->lastRates[$to]->rate / pow(10, $this->lastRates[$to]->exponent));
 
         Log::debug(" converted =   ", [$USDEquivalent, $TOEquivalent, round($amount / $TOEquivalent, 2)]);
         return [(int)$USDEquivalent, (int)$TOEquivalent, round($amount / $TOEquivalent, 2)];
-        // @toDo добавить с учетом расчета экспаненты отличной от 4х (при сохранении в currency_rates - курс указан в целых с указанием экспоненты - pow(10, exponnet*-1);
+        // @toDo проверить с учетом расчета экспаненты отличной от 4х (при сохранении в currency_rates - курс указан в целых с указанием экспоненты - pow(10, exponnet*-1);
+    }
+
+    public function getLastRates()
+    {
+        return $this->lastRates;
     }
 }

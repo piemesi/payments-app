@@ -9,13 +9,13 @@
 namespace App\Service\ApiMethod;
 
 use App\Service\Account\AccountService;
-use App\Service\Account\Models\Wallet;
+use App\Service\Account\Models\UserModel;
 
 class AccountApiMethod extends ApiMethodService
 {
     const CONST_METHOD_NAME = 'create-account';
     const METHOD_OBLIGATORY_FIELDS = [
-        'name', 'country_code', 'city_id', 'currency_code', 'email', 'password'
+        'name', 'country_code', 'city_id', 'currency_code', 'email' #, 'password'
     ];
 
     static public function getApiMethodName(): string
@@ -31,5 +31,10 @@ class AccountApiMethod extends ApiMethodService
     public function process(array $requestData)
     {
         $this->service->createAccount($requestData);
+    }
+
+    public function getAccountByUser(UserModel $userModel)
+    {
+        return $this->service->getAccountByUser($userModel);
     }
 }

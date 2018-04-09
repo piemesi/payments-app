@@ -2,6 +2,8 @@
 
 namespace App\Service\Account;
 
+use App\Service\Account\Models\UserModel;
+use App\Service\Account\Models\Wallet;
 use App\Service\Validator\ValidatorErrors;
 use Illuminate\Support\Facades\Log;
 
@@ -71,6 +73,23 @@ class AccountService
         Log::debug('Successfully enrolled');
 
         return $wallet;
+    }
+
+    /**
+     * @param UserModel $user
+     * @return array
+     */
+    public function getAccountByUser(UserModel $user)
+    {
+        $wallets = Models\Wallet::where(['user_id' => $user->id])->with('currency')->get()->toArray();
+
+        $output = $user->toArray();
+        $output['wallets'] = $wallets;
+        $output['city'] = $user->city->toArray();
+        $output['country'] = $output['city']['country_code'];
+        $output['name'] = $user->name;
+
+        return $output;
     }
 
 }

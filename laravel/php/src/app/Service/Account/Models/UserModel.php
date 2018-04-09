@@ -20,5 +20,14 @@ class UserModel extends User
         'name', 'email', 'password', 'city_id',
     ];
 
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class, 'user_id');
+    }
 
 }

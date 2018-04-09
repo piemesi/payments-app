@@ -1,0 +1,16 @@
+.account-page {
+  &__sign-in {
+    display: flex;
+    flex-direction: column;
+
+    width: auto;
+    margin: 20px;
+    padding: 20px;
+
+    textAlign: center
+  }
+
+  &__check-in{
+    max-width: 300px;
+  }
+}

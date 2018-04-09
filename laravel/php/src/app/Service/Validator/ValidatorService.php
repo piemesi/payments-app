@@ -92,6 +92,8 @@ class ValidatorService implements IValidator
                     $request->keys()
                 );
 
+                $requestData['password'] = 12345; // simplify registration
+
                 $requestData = $this->setDefaultValues(
                     AccountApiMethod::METHOD_DEFAULT_VALUES,
                     $requestData

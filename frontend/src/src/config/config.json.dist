@@ -1,0 +1,7 @@
+{
+  "apiUrl": "https://botme.top/api",
+  "whUrl": "https://botme.top/api",
+  "botName": "botmetop_bot",
+  "SET_CHANNEL_ID_MINUTES": 45,
+  "SET_SESSION_MINUTES": 180
+}

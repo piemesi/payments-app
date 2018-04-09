@@ -134,17 +134,17 @@ services:
 #      networks:
 #      - main
  
-#  front:
-#      build: ./front
-#      container_name: "front"
-#      ports:
-#       - "${FRONT_PORT}"
-#      links:
-#       - mongo
-#      volumes :
-#       - /var/www/pac.me:/app
-#      networks:
-#      - main
+  frontend:
+      build: ./frontend
+      container_name: "frontend"
+      ports:
+       - "${FRONT_PORT}"
+      links:
+       - backend.nginx
+      volumes :
+       - /var/www/pac.me:/app
+      networks:
+      - main
 #
 #  webserver:
 #      build: ./webserver

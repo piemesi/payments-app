@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Service\ApiMethod\Currency;
+use App\Service\Account\Models\City;
+use App\Service\Account\Models\Country;
 use App\Service\ApiMethod\CurrencyRateApiMethod;
 use App\Service\ApiMethod\TransactionApiMethod;
+use App\Service\Convertor\ConvertorService;
+use App\Service\Currency\Models\Currency;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -18,13 +21,12 @@ class ApiController extends Controller
         return response()->json([
             'status' => $currency->getStatus(),
             'case' => $currency->getCase(),
-            'message' => $currency->getMessage()
+            'response' => $currency->getMessage()
         ]);
     }
 
     public function transaction(TransactionApiMethod $transactionApiMethod, Request $request)
     {
-        print_r('>>>>>>..');
         if ($transactionApiMethod->validateRequest($request)) {
             $transactionApiMethod->processRequest();
         }
@@ -32,7 +34,48 @@ class ApiController extends Controller
         return response()->json([
             'status' => $transactionApiMethod->getStatus(),
             'case' => $transactionApiMethod->getCase(),
-            'message' => $transactionApiMethod->getMessage()
+            'response' => $transactionApiMethod->getMessage()
+        ]);
+    }
+
+    public function countries()
+    {
+        $countries = Country::all()->toArray();
+
+        return response()->json([
+            'status' => 'success',
+            'response' => array_column($countries, 'name', 'code')
+        ]);
+
+    }
+
+    public function cities()
+    {
+        $cities = City::all()->toArray();
+        
+        return response()->json([
+            'status' => 'success',
+            'response' => $cities
+        ]);
+    }
+
+    public function currencies()
+    {
+        $currencies = Currency::all()->toArray();
+
+        return response()->json([
+            'status' => 'success',
+            'response' => array_column($currencies, 'code', 'id')
+        ]);
+    }
+
+    public function getCurrencyRates()
+    {
+        $convertor = new ConvertorService();
+
+        return response()->json([
+            'status' => 'success',
+            'response' => $convertor->getLastRates()
         ]);
     }
 }

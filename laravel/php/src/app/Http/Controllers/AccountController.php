@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Service\Account\Models\UserModel;
 use App\Service\Account\Models\Wallet;
 use App\Service\ApiMethod\AccountApiMethod;
 use App\User;
@@ -24,7 +25,14 @@ class AccountController extends Controller
      */
     public function index()
     {
-        //
+        $users = UserModel::with('wallets')->get();
+
+
+
+        return response()->json([
+            'status' => 'success',
+            'response' => $users
+        ]);
     }
 
     /**
@@ -34,7 +42,7 @@ class AccountController extends Controller
      */
     public function create(Request $request)
     {
-//        print_r($request->all());
+        //
     }
 
     /**
@@ -46,18 +54,14 @@ class AccountController extends Controller
      */
     public function store(AccountApiMethod $account, Request $request)
     {
-
-        print_r([$request->all()]);
-
         if ($account->validateRequest($request)) {
             $account->processRequest();
         }
 
-
         return response()->json([
             'status' => $account->getStatus(),
             'case' => $account->getCase(),
-            'message' => $account->getMessage()
+            'response' => $account->getMessage()
         ]);
     }
 
@@ -69,7 +73,31 @@ class AccountController extends Controller
      */
     public function show(User $user)
     {
-        //
+
+    }
+
+    /**
+     * Temporary method for pseudo auth (we need just email)
+     * @param AccountApiMethod $account
+     * @param Request $request
+     * @param $email
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkUserByEmail(AccountApiMethod $account, Request $request, $email)
+    {
+        $user = UserModel::where(['email' => $email])->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'response' => 'No such user by email'
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'response' => $account->getAccountByUser($user)
+        ]);
     }
 
     /**

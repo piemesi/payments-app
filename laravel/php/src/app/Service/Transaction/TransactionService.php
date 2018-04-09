@@ -111,7 +111,7 @@ class TransactionService
     {
         Log::debug('444444', [$requestData]);
         if ($wallet->currency->code === $requestData['currency_from'])
-            return [$requestData['amount_from'], $requestData['amount_from']];
+            return [$requestData['amount_from'], $requestData['amount_from'], 1];
 
         Log::debug('5555555555', [$requestData]);
         $convertedValues = $this->convertor->convert(

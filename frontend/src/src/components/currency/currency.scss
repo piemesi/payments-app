@@ -1,0 +1,15 @@
+.currency {
+  &__list {
+    display: flex;
+    justify-content: flex-end;
+
+    margin: 20px;
+
+  }
+
+  &__right
+  {
+    margin-left: 50px;
+    width: 200px;
+  }
+}
