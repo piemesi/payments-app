@@ -23,6 +23,25 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 
 # Методы Api
 **...Описать позже...**
+* Все доступны со стороны frontend'a:
+   * `frontend/src/src/api/index.js`
+* Со стороны backend'a:
+   * `laravel/php/src/routes/api.php`
+* `Content/type: application/json`
+* Список:
+   * get(`${apiPrefix}/api/account/`); // получение списка аккаунтов пользователей (users+wallets)
+   * get(`${apiPrefix}/api/countries/`); // 
+   * get(`${apiPrefix}/api/cities/`); 
+   * get(`${apiPrefix}/api/currencies/`); // список доступных валют
+   * get(`${apiPrefix}/api/currency-rate/`); // список соотношения валют к доллару (группировка последнего сохраненного по каждой валюте
+   * get(`${apiPrefix}/api/report/${statId}/csv`); // получение csv по сформированному отчету (statId) - см. следующий запрос
+   * get(`${apiPrefix}/api/account/${email}/report/?${addParams.join('&')}`, {date_from, date_to}); // формирования отчета по указанным параметрам
+   * get(`${apiPrefix}/api/account/${email}/check`); // получение аккаунта по email (user+wallets)
+   * post(`${apiPrefix}/api/account/`, data); // создание аккаунта (users+wallets) на основе параметров: {name[string], country_code[ex:"RUS"], city_id[int], currency_code[ex:"USD"], email, password[12345]). Если пользователь с таким email уже есть -> проверяется наличие соответствующего у него кошелька с указанной валютой - если нет -> создается соотвтетствующий кошелек.
+   * post(`${apiPrefix}/api/transaction/`, data);
+      * submitEnroll: {"wallet_to":INT,"amount_from":"100000","currency_from":"RUB"} // зачисление/снятие
+      * submitTransfer: {"wallet_to":INT,"wallet_from":INT,"amount_from":INT} // перевод с кошелька на кошелек
+   * post(`${apiPrefix}/api/currency-rate/`, data); // обновление котировок валют (сейчас все к USD) `{"currency_from":"RUB",	"source": "CBR","rate":600000,"exponent":INT[default=4]}` exponent'a нужна чтобы хранить котировки в базе как целые числа (rate делиться на 10 в указаной степени [exponent])
 
 
 # DB
@@ -53,8 +72,8 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 # Структура проекта/сервисов
 ![db tables](http://task.softmade.ru/frontend.png)
 ### Frontend
-    * настройка локальной сборки с (Hot Module Replacement) в webpack-dev-server
-    * продакшн - webpack
+    * настройка локальной сборки с (Hot Module Replacement) в `frontend/src/webpack-dev-server.config.js`
+    * продакшн - `frontend/src/webpack.config.js`
     * в папке **www** -> ассеты и индекс пейдж для локальной работы
     * в node_modules -> результат `npm i` аКа `npm install` - можно `yarn install` - необходимые зависисмости
     * в папке **build/** -> результат продакшн сборки (`webpack`)
@@ -64,8 +83,9 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
             * accountReducer, currencyReducer, registerReducer, transactionReducer
         * в папке routing -> инитный сыроватый роутинг.
         * в папке components -> компоненты:
-            * стремление к BEMу (тут не сильно видно) - архитекутра стилей компонентов 
+            * стремление к BEMу (тут не сильно видно) - архитекутра стилей компонентов [BEM-методология](http://task.softmade.ru/frontend.png)
             * сами компоненты, говорящие за себя -> account-page, currency, register, report, wallet, welcome-page 
+    * Дизайн: использовалась бибилиотека material-ui реализация концепцию material дезайна
 
            
 ![db tables](http://task.softmade.ru/services.png)    
