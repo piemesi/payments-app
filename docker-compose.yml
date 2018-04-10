@@ -6,7 +6,7 @@ services:
     container_name: 'balancer'
     build: ./balancer
     ports:
-      - "80:80"
+      - "83:80"
       - "443:443"
     volumes:
       - ./logs/balancer:/var/logs
@@ -33,8 +33,8 @@ services:
 #      image: malgrat/phpfpm:rdkafka_composer_pinba_pdo
       container_name: 'backend.php'
       build: ./laravel/php
-      extra_hosts:
-       - "localhost:172.17.0.1"
+#      extra_hosts:
+#       - "localhost:172.17.0.1"
       links:
        - redis-cache
        - postgres
@@ -45,26 +45,6 @@ services:
       working_dir: /app
       networks:
       - paymentsnet
-#  mysql:
-#      #image: malgrat/mysql_percona:task
-#      build: ./mysql
-#      container_name: 'mysql'
-#      environment:
-#       MYSQL_ROOT_PASSWORD: 123456
-#       MYSQL_USER: realty
-#       MYSQL_PASSWORD: 123456
-#       MYSQL_DATABASE: realty_tasks
-##      extra_hosts:
-##       - "dbhost:172.17.0.5"
-#      ports:
-#       - "${MYSQL_REALTY_PORT}"
-#      volumes:
-#       - "${MYSQL_REALTY_DATA}"
-#       - ./mysql/my.cnf:/etc/mysql/my.cnf
-#      command:
-#       - '--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci'
-#      networks:
-#       - main
 
   postgres:
     container_name: 'postgres'
@@ -84,24 +64,6 @@ services:
       - POSTGRESQL_DATABASE=payments
     networks:
       - paymentsnet
-
-#  mongo:
-#      container_name: 'mongo'
-#      image: mongo
-#      ports:
-#       - "27017:27017"
-#      volumes:
-#       - /data/mongodb/db:/data/db
-#      networks:
-#       - main
-
-#  memcached:
-#      container_name: 'memcached'
-#      image: memcached
-#      ports:
-#       - "11211:11211"
-#      networks:
-#      - main
 
   redis-cache:
       container_name: 'redis-cache'
@@ -134,30 +96,19 @@ services:
 #      networks:
 #      - main
  
-  frontend:
-      build: ./frontend
-      container_name: "frontend"
-      ports:
-       - "${FRONT_PORT}"
-      links:
-       - backend.nginx
-      volumes :
-       - /var/www/pac.me:/app
-      networks:
-      - main
-#
-#  webserver:
-#      build: ./webserver
-#      container_name: "webserver"
-#      ports:  # ?
-#       - "8080:8080"
+#  frontend:
+#      build: ./frontend
+#      container_name: "frontend"
+#      ports:
+#       - "${FRONT_PORT}"
 #      links:
-#       - mongo
+#       - backend.nginx
 #      volumes :
 #       - /var/www/pac.me:/app
-#       - app-volume:/app/casper/proxy-data
 #      networks:
-#      - main
+#      - paymentsnet
+#
+
 
 
 networks:

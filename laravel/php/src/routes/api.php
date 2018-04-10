@@ -29,4 +29,4 @@ Route::post('/transaction', "ApiController@transaction")->name('transaction');
 Route::apiResource('account', 'AccountController');
 Route::get('account/{email}/check', 'AccountController@checkUserByEmail')->name('check-user-by-email');
 Route::get('account/{email}/report', 'AccountController@report')->name('report');
-Route::middleware('cors:api')->get('report/{statId}/csv', 'AccountController@getCSV')->name('get-csv');
+Route::get('report/{statId}/csv', 'AccountController@getCSV')->name('get-csv');
