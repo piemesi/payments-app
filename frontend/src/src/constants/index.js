@@ -12,5 +12,7 @@ export default keyMirror({
     SUBMIT_CURRENCY_RATE: null,
     GET_CURRENCY_RATES: null,
     GET_ACCOUNTS: null,
+    GET_REPORTS: null,
+    GET_CSV: null,
 
 })

@@ -1,0 +1,29 @@
+.report
+{
+  &__filter
+  {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+
+  &__general-list
+  {
+
+    display: flex;
+
+  }
+
+  &__general-item
+  {
+    max-width: 200px;
+
+    > div {
+      > div {
+        padding: 2px;
+      }
+    }
+
+  }
+}

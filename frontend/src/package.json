@@ -75,6 +75,7 @@
     "react-datetime": "^2.8.10",
     "react-day-picker": "^5.5.3",
     "react-dom": "^15.6.1",
+    "react-file-download": "^0.3.5",
     "react-fontawesome": "^1.6.1",
     "react-frame-component": "^2.0.0",
     "react-helmet": "^5.1.3",

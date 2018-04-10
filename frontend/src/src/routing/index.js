@@ -34,6 +34,15 @@ const muiTheme = getMuiTheme({
         clockCircleColor: fade(colors.darkBlack, 0.07),
         shadowColor: colors.fullBlack,
     },
+    tableRow: {
+        padding: 0,
+        tableRowColumn: {
+            padding: 0
+        }
+    },
+    tableRowColumn:{
+        padding: 0
+    }
 });
 
 
@@ -41,22 +50,13 @@ import './routing.scss'
 const Public = () => <h3>Посадочная страница</h3>
 const Protected = (props) => {
 
-    let menu = <ul style={styles.nav}>
-        <NavLink to="/add/100/40">Обзор по миру</NavLink>
-        <NavLink to="/list/100/35">Все предложения по регионам</NavLink>
-        <NavLink to="/calendar/100/30">Тур по стране</NavLink>
-        <NavLink to="/channel/100/25">Тур по региону</NavLink>
-    </ul>
 
     let contentStyle = styles.content
 
-    if (location.pathname.indexOf('show') !== -1) {
-        menu = <header style={styles.navInside}>UTS Company channel</header>
-        contentStyle = styles.contentInside
-    }
+
 
     return <div style={styles.fill}>
-        {menu}
+
 
         <div style={contentStyle}>
             <CSSTransitionGroup
@@ -125,17 +125,6 @@ class LoginPage extends Component {
                          >
 
                         <WelcomePage />
-                        {/*<p>You must log in to view the page at {from.pathname}</p>*/}
-                        {/*<button onClick={this.login}>Log in</button>*/}
-                        {/*<Paper zDepth={3} rounded={true} style={{margin:'20px 0px', padding:'20px 20px 30px'}} >*/}
-                        {/*<div className="telegram-logos"  >*/}
-                            {/*<img src="/images/telegram_man.jpg" />*/}
-                            {/*<img  src="/images/telegram_girl.png" />*/}
-                        {/*</div>*/}
-                        {/*/!*<AuthStep />*!/*/}
-                        {/*</Paper>*/}
-
-
 
                     </div>
                 </MuiThemeProvider>

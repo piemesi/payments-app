@@ -1,0 +1,195 @@
+.sso {
+  font-family: 'Geometria';
+  &-bg-back {
+    background-image: url('/assets/images/bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  &-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+  }
+  &-header {
+    padding-left: 31px;
+    padding-top: 29px;
+    display: flex;
+    &__name {
+      .name-main {
+        color: #FF5000;
+        font-size: 24pt;
+        font-weight: bold;
+        letter-spacing: 2pt;
+      }
+      .name-info {
+        font-size: 14pt;
+        font-weight: bold;
+        letter-spacing: 2pt;
+        color: #fff;
+        line-height: 28px;
+      }
+    }
+    &__info:before {
+      content: ' ';
+      background: #FF5000;
+      width: 2px;
+      height: 84px;
+      position: absolute;
+      margin-top: -27px;
+      margin-left: -34px;
+      -moz-transform: rotate(29deg);
+      -o-transform: rotate(29deg);
+      -webkit-transform: rotate(29deg);
+      filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.7071067811865476, M12=0.7071067811865475, M21=-0.7071067811865475, M22=0.7071067811865476);
+    }
+    &__info {
+      font-weight: bold;
+      line-height: 14px;
+      font-size: 11px;
+      color: #fff;
+      margin-left: 37px;
+      margin-top: 10px;
+    }
+  }
+  &-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__layout {
+      width: 300px;
+      padding: 0px 30px;
+      background: linear-gradient(-125deg, #792B8E, #532F91);
+      .form__title {
+        font-family: 'Geometria';
+        font-size: 19pt;
+        color: #fff;
+        line-height: 21pt;
+        margin-top: 35px;
+      }
+    }
+    &__login-form {
+      .login-form__vk {
+        border-radius: 3px;
+        background-color: #507298;
+        width: 100%;
+        color: #fff;
+        font-family: 'Geometria';
+        margin-top: 32px;
+        height: 42px;
+        font-weight: bold;
+      }
+      .login-form__line {
+        border-radius: 1px;
+        margin-top: 32px;
+        text-align: center;
+        color: #fff;
+        span:before {
+          content: " ";
+          width: 44%;
+          height: 1px;
+          display: block;
+          background-color: #fff;
+          position: relative;
+          top: 12px;
+        }
+        span:after {
+          content: " ";
+          width: 44%;
+          height: 1px;
+          display: block;
+          background-color: #fff;
+          position: relative;
+          top: -8px;
+          right: -56%;
+        }
+      }
+      .login-form__login {
+        border-radius: 3px;
+        width: 100%;
+        background-color: transparent;
+        color: #fff;
+        border: 1px solid;
+        text-transform: inherit;
+        font-family: 'Geometria';
+        font-weight: bold;
+        margin-top: 35px;
+        height: 42px;
+        margin-bottom: 27px;
+      }
+    }
+    &__login-email {
+      .login-email__next {
+        border-radius: 3px;
+        background-color: #FF4E06;
+        width: 100%;
+        color: #fff;
+        font-family: 'Geometria';
+        margin-top: 32px;
+        height: 42px;
+        font-weight: bold;
+        margin-bottom: 27px;
+      }
+    }
+  }
+  &-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &__left-section {
+      padding-left: 16px;
+      padding-bottom: 9px;
+      &-em {
+        margin-left: 2px;
+        float: left;
+      }
+      &-text {
+        color: #dadada;
+        line-height: 18px;
+        padding-top: 23px;
+        padding-left: 8px;
+        float: left;
+        font-size: 9pt;
+      }
+    }
+    &__right-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      .right-section-copy {
+        font-size: 9pt;
+        color: #dadada;
+        padding-right: 30px;
+        padding-bottom: 21px;
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .sso {
+    &-bg-back {
+      background-image: none;
+      background: linear-gradient(-125deg, #792B8E, #532F91);
+    }
+    &-header {
+      justify-content: center;
+    }
+    &-footer > div {
+      display: none;
+    }
+    &-form {
+      &__layout {
+        background: transparent;
+      }
+    }
+  }
+}
+

@@ -117,6 +117,8 @@ class CurrencyUpdate extends Component {
                         <span>Take into consideration that <strong>exponent is fixed now. It is equal to "4".</strong><br/>
                         That means that if you want to stipulate ratio (for example) USD/RUB = 60/1:<br/>
                         You will need to type in input 600000 (60 * 10^4) and choose "RUB" currency</span>
+                        <span>This is done for the sake of keeping integer values in database even for currencies
+                            (not double or float)</span>
 
                         {action === 'update' && <div>
                             <h2>Update Currency Rate For USD</h2>

@@ -1,9 +1,5 @@
 import constants from '../constants'
-import {getHashOffersRoute} from '../constants/routes'
-
-import _ from 'lodash'
-
-import {apiUrl, whUrl} from '../config/config.json';
+import {apiUrl} from '../config/config.json';
 
 import api from '../api';
 
@@ -21,10 +17,9 @@ const handlePromise = (type, method) => {
                     }
                 }
             ).then(json => {
-                // console.log('json', json)
-                return Promise.resolve(json) //, addData: {, countryId}
+                return Promise.resolve(json)
             }).catch(err => {
-                    console.error(err)
+                    console.error(err);
                     return Promise.resolve({error: true, msg: err})
                 }
             )
@@ -40,6 +35,8 @@ export const getCurrencyRates = () => handlePromise(constants.GET_CURRENCY_RATES
 export const getCountries = () => handlePromise(constants.GET_COUNTRIES, api.getCountries());
 
 export const getAccounts = () => handlePromise(constants.GET_ACCOUNTS, api.getAccounts());
+
+export const getReport = (date_from, date_to, email, csv) => handlePromise(constants.GET_REPORT, api.getReport(date_from, date_to, email, csv));
 
 export const signIn = (email) => handlePromise(constants.SIGN_IN, api.signIn(email));
 
@@ -68,85 +65,3 @@ export const logout = () => {
         type: 'LOGOUT'
     }
 };
-
-
-export const getPostsForChannel = (data, actType = 0) => {
-
-
-    let listRoutes = [{
-        link: 'get_posts',
-        type: 'GET_POSTS'
-    }, {
-        link: 'get_posts_sent',
-        type: 'GET_POSTS_SENT'
-    }, {
-        link: 'get_posts_unsent',
-        type: 'GET_POSTS_UNSENT'
-    }]
-
-    let url = `${apiUrl}/${listRoutes[actType].link}/` + data
-
-    return {
-        type: listRoutes[actType].type,
-        payload: fetch(url)
-            .then(response => {
-                console.log('START response', response)
-                if (response.ok) {
-                    let resp = response.json()
-                    console.log('START resp', resp)
-                    return resp
-                }
-                else {
-                    return Promise.reject();
-                }
-            })
-            .then(json => {
-                return Promise.resolve(json)
-            })
-
-    };
-};
-
-
-// let promis = axios.get(`${apiUrl}/get_posts/1` ); //, , mode:'no-cors'}
-//  if(response.status == 200){
-
-
-import * as funcs from '../mainFunc';
-
-export const setCurrentChannel = (current) => {
-    funcs.setCookedChannelId(current);
-
-    return {
-        type: 'SET_CURRENT_CHANNEL',
-        current
-    }
-};
-
-export const getCurrentChannel = (channelId) => {
-
-    let url = `${apiUrl}/get_channel/` + channelId
-
-    return {
-
-        type: `GET_CHANNEL`,
-        payload: fetch(url)
-            .then(response => {
-                console.log('START response', response)
-                if (response.ok) {
-                    store.dispatch(setCurrentChannel(channelId));
-                    let resp = response.json()
-                    console.log('START resp', resp)
-                    return resp
-                }
-                else {
-                    return Promise.reject();
-                }
-            })
-            .then(json => {
-                return Promise.resolve(json)
-            })
-
-    };
-};
-

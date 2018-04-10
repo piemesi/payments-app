@@ -9,7 +9,9 @@ const initalState = {
     registered: false,
     lastMsg: null,
 
-    accounts: []
+    accounts: [],
+    reports: null,
+    csvError: null
 };
 
 const SUCCESS_STATUS = 'success';
@@ -55,6 +57,7 @@ const accountReducer = (state = initalState, action) => {
             let accounts = [];
             if (status === SUCCESS_STATUS) {
                 accounts = response;
+                accounts = accounts.filter(a => a.id)
             }
 
             return {
@@ -75,6 +78,45 @@ const accountReducer = (state = initalState, action) => {
 
             return {
                 ...state, registered: false, email: null
+            };
+        }
+
+
+        case `${constants.GET_REPORT}_FULFILLED`: {
+            console.log('action', action)
+
+            const {response, status} = action.payload;
+            let reports;
+            if (status === SUCCESS_STATUS) {
+                reports = response;
+            }
+
+            return {
+                ...state, reports
+            };
+        }
+
+        case `${constants.GET_CSV}_PENDING`: {
+            console.log('action', action)
+
+            return {
+                ...state, csvError: null
+            };
+        }
+
+        case `${constants.GET_CSV}_FULFILLED`: {
+            console.log('action', action)
+
+            const {response, status} = action.payload;
+            let lastMsg = null;
+            let csvError = true;
+            if (status === SUCCESS_STATUS) {
+                lastMsg = response;
+                csvError = false;
+            }
+
+            return {
+                ...state, csvError
             };
         }
         default:

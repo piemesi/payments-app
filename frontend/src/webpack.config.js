@@ -1,14 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
-// const TransferWebpackPlugin = require('transfer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const fs = require('fs');
-// const gracefulFs = require('graceful-fs');
-// gracefulFs.gracefulify(fs);
 
-// const UglifyJS = require("uglify-es");
-// const BabiliPlugin = require("babili-webpack-plugin");
-// const babiliOptions = {}
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const extractPlugin = new ExtractTextPlugin({
     filename: 'bundle.css'
@@ -17,8 +10,7 @@ const extractPlugin = new ExtractTextPlugin({
 const config = {
     entry: {
         main: [
-              './src/app/app.js',
-            // './src/app/entrypoint.js',
+              './src/entrypoint.js',
         ],
     },
     // Render source-map file for final build
@@ -47,12 +39,12 @@ const config = {
                 side_effects: false,
                 properties: true,
                 // sequences: true,
-                // dead_code: false,
+                dead_code: false,
                 // conditionals: true,
                 // comparisons: true,
                 // evaluate: true,
                 // booleans: true,
-                // unused: true,
+                unused: true,
                 // loops: true,
                 // hoist_funs: true,
                 // cascade: true,
@@ -89,7 +81,7 @@ const config = {
         // ], path.resolve(__dirname, 'src')),
         new CopyWebpackPlugin([
                 // {output}/file.txt
-                { from: 'src/www' }]),
+                { from: 'www' }]),
         extractPlugin
     ],
     module: {
@@ -115,31 +107,15 @@ const config = {
                 })
             },
             {
-                test: /\.css/,
+                test: /\.css$/,
                 use: extractPlugin.extract({
                     use: ['style-loader', 'css-loader']
                 })
             },
-
             {
                 test: /\.svg/,
                 loader: "url-loader?limit=26000&mimetype=image/svg+xml"
             },
-            // {
-            //     test: /\.css$/,
-            //     loader: "style-loader!css-loader!postcss-loader",
-            //     exclude: [/node_modules/, /public/]
-            // },
-            // {
-            //     test: /\.less$/,
-            //     loader: "style-loader!css-loader!postcss-loader!less",
-            //     exclude: [/node_modules/, /public/]
-            // },
-            // {
-            //     test: /\.styl$/,
-            //     loader: "style-loader!css-loader!postcss-loader!less",
-            //     exclude: [/node_modules/, /public/]
-            // },
         ],
     },
 };

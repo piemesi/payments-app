@@ -46,7 +46,7 @@ class WelcomePage extends Component {
 
     render() {
         return (
-            <Tabs initialSelectedIndex={2}>
+            <Tabs initialSelectedIndex={0}>
                 <Tab
                     icon={<DashboardIcon />}
                     index={0}
