@@ -11,6 +11,7 @@ class ConvertorService
 
     public function __construct()
     {
+        //        Get the latest rates grouping by currency
         $lastRates = DB::select("
                 SELECT *
                 FROM (
@@ -21,13 +22,18 @@ class ConvertorService
                 ) AS dt
                 WHERE r = 1");
 
-        foreach ($lastRates as $key => $value) {
+        foreach ($lastRates as $key => $value)
             $this->lastRates[$value->currency_from] = $value;
-        }
 
-        Log::debug('LR', [$this->lastRates]);
+        Log::debug('LatesRates', [$this->lastRates]);
     }
 
+    /**
+     * @param $amount
+     * @param $from
+     * @param $to
+     * @return array|null
+     */
     public function convert($amount, $from, $to)
     {
         Log::debug("Begin converting... ", [$from, $to, $amount]);

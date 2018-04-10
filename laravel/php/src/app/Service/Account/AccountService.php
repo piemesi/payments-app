@@ -3,7 +3,6 @@
 namespace App\Service\Account;
 
 use App\Service\Account\Models\UserModel;
-use App\Service\Account\Models\Wallet;
 use App\Service\Validator\ValidatorErrors;
 use Illuminate\Support\Facades\Log;
 
@@ -38,6 +37,10 @@ class AccountService
         ], $requestData);
     }
 
+    /**
+     * @param int $userId
+     * @throws ValidatorErrors
+     */
     private function checkWalletsCountPerUser(int $userId)
     {
         $walletsCount = Models\Wallet::where(['user_id' => $userId])->count();
@@ -51,6 +54,8 @@ class AccountService
      *
      * @param int $walletId
      * @param int $amount
+     * @param bool $withdraw
+     * @return
      * @throws AccountErrors
      */
     public function enrollAmount(int $walletId, int $amount, bool $withdraw = false)
@@ -90,6 +95,23 @@ class AccountService
         $output['name'] = $user->name;
 
         return $output;
+    }
+
+    /**
+     * @param string $email
+     * @return array
+     * @internal param UserModel $user
+     */
+    public function getAccountByEmail(string $email)
+    {
+        Log::debug('Searching for account by email', [$email]);
+
+        $account = UserModel::where(['email' => $email])->with('city')->with('wallets.currency')
+            ->first()->toArray();
+
+        Log::debug('Searching account:', [$account]);
+
+        return $account;
     }
 
 }

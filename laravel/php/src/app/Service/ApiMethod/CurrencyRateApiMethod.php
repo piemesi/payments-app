@@ -10,7 +10,7 @@ namespace App\Service\ApiMethod;
 
 use App\Service\Currency\CurrencyService;
 
-class CurrencyRateApiMethod extends ApiMethodService # implements IAppMethod
+class CurrencyRateApiMethod extends ApiMethodService
 {
     const CONST_METHOD_NAME = 'currency-rate';
     const METHOD_OBLIGATORY_FIELDS = ['currency_from', 'rate'];

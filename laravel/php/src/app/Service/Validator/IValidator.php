@@ -13,5 +13,5 @@ use Illuminate\Http\Request;
 
 interface IValidator
 {
-    public function check(string $apiMethod, Request $request);
+    public function check(string $apiMethod, Request $request, array $params = []);
 }

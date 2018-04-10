@@ -11,7 +11,8 @@
         "igaster/laravel_cities": "^1.3",
         "jadsalhani/world-countries-cities": "0.1.2",
         "laravel/framework": "5.6.*",
-        "laravel/tinker": "^1.0"
+        "laravel/tinker": "^1.0",
+        "league/csv": "^9.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

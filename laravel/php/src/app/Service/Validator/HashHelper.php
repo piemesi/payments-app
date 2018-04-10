@@ -9,7 +9,12 @@
 namespace App\Service\Validator;
 
 
+use Carbon\Carbon;
+
 class HashHelper
 {
-
+    static public function generateHash($requestData)
+    {
+        return md5(json_encode($requestData) . Carbon::now()->toDayDateTimeString());
+    }
 }

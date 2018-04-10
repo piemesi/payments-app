@@ -8,12 +8,13 @@
 
 namespace App\Service\ApiMethod;
 
-use App\Service\Account\StatService;
+use App\Service\Stat\Models\Stat;
+use App\Service\Stat\StatService;
 use App\Service\Account\Models\UserModel;
 
 class StatApiMethod extends ApiMethodService
 {
-    const CONST_METHOD_NAME = 'create-account';
+    const CONST_METHOD_NAME = 'stats';
     const METHOD_OBLIGATORY_FIELDS = [];
 
     static public function getApiMethodName(): string
@@ -28,11 +29,16 @@ class StatApiMethod extends ApiMethodService
 
     public function process(array $requestData)
     {
-        $this->service->report($requestData);
+        $this->serviceResponse = $this->service->report($requestData);
     }
 
     public function getAccountByUser(UserModel $userModel)
     {
         return $this->service->getAccountByUser($userModel);
+    }
+
+    public function prepareCSV(Stat $stat)
+    {
+        $this->service->prepareCSV($stat);
     }
 }

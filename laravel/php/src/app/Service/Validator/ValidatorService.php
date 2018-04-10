@@ -10,7 +10,6 @@ use App\Service\ApiMethod\StatApiMethod;
 use App\Service\ApiMethod\TransactionApiMethod;
 use App\Service\Currency\Models\Currency;
 use App\Service\Transaction\Models\Transaction;
-use App\Service\Transaction\TransactionService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +23,6 @@ use Illuminate\Support\Facades\Log;
 class ValidatorService implements IValidator
 {
 
-//    const CONST_API_METHODS = ''
     const ERRORS_TEXTS_SKIPPED_FIELDS = "No all the fields are presented";
     const ERRORS_TEXTS_CURRENCIES_DIFFERENCE = "currencies should differ";
 
@@ -59,9 +57,10 @@ class ValidatorService implements IValidator
         }
     }
 
-    public function check(string $apiMethod, Request $request): array
+    public function check(string $apiMethod, Request $request, array $params = []): array
     {
-        $requestData = $request->all();
+        Log::debug('Start validation', [$apiMethod, $request->all(), $params]);
+        $requestData = $request->all() + $params;
         switch ($apiMethod) {
             case CurrencyRateApiMethod::getApiMethodName():
 
@@ -101,8 +100,8 @@ class ValidatorService implements IValidator
                     $requestData
                 );
 
-                $currenciesList = Currency::all()->pluck('id','code')->toArray();
-                if(!in_array($requestData['currency_code'], array_keys($currenciesList))){
+                $currenciesList = Currency::all()->pluck('id', 'code')->toArray();
+                if (!in_array($requestData['currency_code'], array_keys($currenciesList))) {
                     Log::error(self::ERRORS_TEXTS_NO_CURRENCY);
                     throw new ValidatorErrors(self::ERRORS_TEXTS_NO_CURRENCY, 621);
                 }
@@ -110,19 +109,19 @@ class ValidatorService implements IValidator
                 $requestData['currency_id'] = $currenciesList[$requestData['currency_code']];
 
                 $countriesList = Country::all()->pluck('code')->toArray();
-                if(!in_array($requestData['country_code'], $countriesList)){
+                if (!in_array($requestData['country_code'], $countriesList)) {
                     Log::error(self::ERRORS_TEXTS_NO_COUNTRY);
                     throw new ValidatorErrors(self::ERRORS_TEXTS_NO_COUNTRY, 622);
                 }
 
                 $cityOfCountry = City::find($requestData['city_id']);
 
-                if(!$cityOfCountry || $cityOfCountry->country_code !== $requestData['country_code']) {
+                if (!$cityOfCountry || $cityOfCountry->country_code !== $requestData['country_code']) {
                     Log::error(self::ERRORS_TEXTS_NO_COUNTRY);
                     throw new ValidatorErrors(self::ERRORS_TEXTS_NO_COUNTRY, 623);
                 }
 
-                $request->validate(['email'=>'email']);
+                $request->validate(['email' => 'email']);
 
 
                 break;
@@ -139,10 +138,10 @@ class ValidatorService implements IValidator
                     $requestData
                 );
 
-                $keysDiffTypeDeposit = array_diff(['currency_from'],$request->keys());
-                $keysDiffTypeTransaction = array_diff(['wallet_from'],$request->keys());
+                $keysDiffTypeDeposit = array_diff(['currency_from'], $request->keys());
+                $keysDiffTypeTransaction = array_diff(['wallet_from'], $request->keys());
 
-                if(count($keysDiffTypeDeposit) && count($keysDiffTypeTransaction)){
+                if (count($keysDiffTypeDeposit) && count($keysDiffTypeTransaction)) {
                     $msg = sprintf(self::ERRORS_TEXTS_NO_TYPE_DETERMINED, 'currency_from', 'wallet_from');
                     Log::error($msg);
                     throw new ValidatorErrors($msg, 631);
@@ -168,10 +167,8 @@ class ValidatorService implements IValidator
                 );
 
                 $requestData['date_from'] = $requestData['date_from'] ?? Carbon::now()->addMonths(-3)->toDateString();
-                $requestData['date_to'] = $requestData['date_to'] ?? Carbon::now()->toDateString();
+                $requestData['date_to'] = $requestData['date_to'] ?? Carbon::now()->addDay()->toDateString();
 
-
-//                $requestData['email'] = ;
                 Log::debug('>>>>', [$requestData, $request->all(), $request->query()]);
                 break;
 

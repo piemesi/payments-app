@@ -10,7 +10,6 @@ namespace App\Service\ApiMethod;
 
 use App\Service\Transaction\Models\Transaction;
 use App\Service\Transaction\TransactionService;
-use App\Service\Validator\ValidatorService;
 
 class TransactionApiMethod extends ApiMethodService
 {

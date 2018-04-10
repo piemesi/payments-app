@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'csvpath' => env('CSV_PATH', 'storage/csv'),
 
     /*
     |--------------------------------------------------------------------------

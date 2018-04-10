@@ -3,14 +3,12 @@
 namespace App\Service\Transaction;
 
 use App\Jobs\ConfirmTransactionJob;
-use App\Providers\AccountServiceProvider;
 use App\Service\Account\AccountService;
 use App\Service\Account\Models\Wallet;
-use App\Service\ApiMethod\AccountApiMethod;
 use App\Service\Convertor\ConvertorService;
-use App\Service\Currency\Models\Currency;
 use App\Service\Transaction\Models\Transaction;
 use App\Service\Transaction\Models\TransactionConfirmed;
+use App\Service\Validator\HashHelper;
 use App\Service\Validator\ValidatorErrors;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +25,7 @@ class TransactionService
 
     const DEFAULT_SYSTEM_WALLET_ID = 1;
 
-    const ERROR_MSG_CURRENCY_CONVERTOR = 'Convert service error. Seems we do not have necessary currency rates [%s,%s]';
+    const ERROR_MSG_CURRENCY_CONVERTOR = 'Convert service error. We do not have currency rates [%s,%s]';
 
     /**
      * @var Wallet
@@ -58,7 +56,7 @@ class TransactionService
      */
     private function createHash($requestData)
     {
-        return md5(json_encode($requestData) . Carbon::now()->toDayDateTimeString());
+        return HashHelper::generateHash($requestData);
     }
 
     private function checkTransactionExists($hash)
@@ -109,11 +107,11 @@ class TransactionService
      */
     private function getAmountTo(Wallet $wallet, array $requestData)
     {
-        Log::debug('444444', [$requestData]);
+        Log::debug('The request Data we have', [$requestData]);
         if ($wallet->currency->code === $requestData['currency_from'])
             return [$requestData['amount_from'], $requestData['amount_from'], 1];
 
-        Log::debug('5555555555', [$requestData]);
+        Log::debug('Can convert. Before converting...', [$requestData]);
         $convertedValues = $this->convertor->convert(
             $requestData['amount_from'],
             $requestData['currency_from'],
@@ -126,24 +124,24 @@ class TransactionService
         return $convertedValues;
     }
 
+    /**
+     * @param array $requestData
+     * @throws ValidatorErrors
+     */
     private function processDepositTransaction(array $requestData)
     {
 
         $transaction = new Transaction();
         $transaction->fill($requestData);
-
         $transaction->currency_to = $this->walletTo->currency->code;
-
         $transaction->wallet_from = self::DEFAULT_SYSTEM_WALLET_ID;
         list($transaction->amount_usd, $transaction->amount_to, $transaction->currency_rates_val) = $this->getAmountTo($this->walletTo, $transaction->toArray());
 
-        Log::debug('77777777777', [$transaction, $requestData]);
         $transaction->save();
 
         if (!$transaction->id) throw new ValidatorErrors('Error while storing transaction into DB', 725);
 
         $this->dispatchConfirmTransactionJob($requestData['hash']);
-
     }
 
     private function dispatchConfirmTransactionJob(string $hash)
@@ -160,14 +158,10 @@ class TransactionService
 
         $transaction->currency_to = $this->walletTo->currency->code;
         $transaction->currency_from = $this->walletFrom->currency->code;
-        Log::info('1111', [$transaction]);
-
 
         list($transaction->amount_usd, $transaction->amount_to,  $transaction->currency_rates_val) = $this->getAmountTo($this->walletTo,
             $transaction->toArray());
 
-
-        Log::debug('999999999', [$transaction, $requestData]);
         $transaction->save();
 
         if (!$transaction->id) throw new ValidatorErrors('Error while storing transaction into DB', 727);

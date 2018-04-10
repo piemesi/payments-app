@@ -1,0 +1,8 @@
+711,14,61,2,0,0,CHF,CHF,4,4,CHF,2,"My name",a@mail.ru,1,eer,w@mail.ru,transaction,confirmed,"2018-04-09 21:01:36","2018-04-09 20:24:03"
+710,13,61,2,0,0,CHF,CHF,4,4,CHF,2,"My name",a@mail.ru,1,eer,w@mail.ru,transaction,confirmed,"2018-04-09 21:01:36","2018-04-09 20:23:39"
+709,11,61,2,13597,1511,CHF,GBP,4,3,GBP,1,eer,w@mail.ru,2,"My name",a@mail.ru,transaction,declined,,"2018-04-09 16:32:28"
+708,10,61,2,1922,213,CHF,GBP,4,3,GBP,1,eer,w@mail.ru,2,"My name",a@mail.ru,transaction,confirmed,"2018-04-09 16:32:08","2018-04-09 16:32:06"
+707,4,61,2,25,12,CHF,CHF,4,4,CHF,2,"My name",a@mail.ru,1,eer,w@mail.ru,transaction,confirmed,"2018-04-09 16:29:26","2018-04-09 16:29:25"
+706,3,61,2,0,1,CHF,CHF,4,4,CHF,2,"My name",a@mail.ru,1,eer,w@mail.ru,transaction,confirmed,"2018-04-09 16:28:41","2018-04-09 16:28:38"
+705,2,61,2,809,90,CHF,USD,4,,,0,"default admin",admin@admin.ru,2,"My name",a@mail.ru,deposit,confirmed,"2018-04-09 16:26:29","2018-04-09 16:26:28"
+704,1,61,2,906,100,CHF,EUR,4,,,0,"default admin",admin@admin.ru,2,"My name",a@mail.ru,deposit,confirmed,"2018-04-09 16:26:20","2018-04-09 16:26:18"

@@ -12,7 +12,7 @@ use App\Service\Validator\ValidatorService;
 use App\Service\Validator\ValidatorErrors;
 use Illuminate\Http\Request;
 
-abstract class ApiMethodService #implements IAppMethod
+abstract class ApiMethodService
 {
     /**
      * Обязательные поля, которые должны быть в методе апи
@@ -39,6 +39,11 @@ abstract class ApiMethodService #implements IAppMethod
      */
     private $message = '';
 
+    /**
+     * @var null
+     */
+    protected $serviceResponse = null;
+
     function __construct(ValidatorService $validator)
     {
         $this->validator = $validator;
@@ -48,12 +53,13 @@ abstract class ApiMethodService #implements IAppMethod
     /**
      * Check the validation of the request fields
      * @param Request $request
+     * @param array $params
      * @return bool
      */
-    public function validateRequest(Request $request): bool
+    public function validateRequest(Request $request, array  $params = []): bool
     {
         try {
-            $this->requestData = $this->validator->check(static::getApiMethodName(), $request);
+            $this->requestData = $this->validator->check(static::getApiMethodName(), $request, $params);
             return true;
         } catch (ValidatorErrors $validatorErrors) {
             $this->status = 'error';
@@ -75,6 +81,7 @@ abstract class ApiMethodService #implements IAppMethod
         try {
             $this->process($this->requestData);
             $this->status = 'success';
+            $this->message = $this->serviceResponse;
             return true;
         } catch (ValidatorErrors $validatorErrors) {
             $this->status = 'error';
@@ -82,6 +89,10 @@ abstract class ApiMethodService #implements IAppMethod
             $this->message =  $validatorErrors->getMessage();
         } catch (\Exception $exception) {
             $this->status = 'error';
+            $this->case = 'process';
+            $this->message = $exception->getMessage();
+        }catch (\Throwable $exception) {
+            $this->status = 'fatal';
             $this->case = 'process';
             $this->message = $exception->getMessage();
         }
@@ -107,7 +118,5 @@ abstract class ApiMethodService #implements IAppMethod
     abstract static public function getApiMethodName(): string;
 
     abstract protected function setService();
-//    {
-//        throw new \Error('Api Method Class should be extended!');
-//    }
+
 }

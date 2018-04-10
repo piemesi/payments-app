@@ -20,14 +20,15 @@ class CreateStatsTable extends Migration
             $table->string('csv_path')->nullable();
             $table->date('date_from')->nullable();
             $table->date('date_to')->nullable();
-            $table->unsignedTinyInteger('ready')->default(0);
+            $table->dateTime('ready')->nullable();
             $table->unsignedBigInteger('total_sum')->default(0); // общая сумма переводов в usd
-            $table->json('wallets_data')->nullable(); // сводные данные по кошелкам пользвоателя
-            $table->json('users_data')->nullable(); // сводные данные по данным других пользователей, кто сколько перевел
+            $table->longText('wallets_data')->nullable(); // сводные данные по кошелкам пользвоателя
+            $table->longText('users_data')->nullable(); // сводные данные по данным других пользователей, кто сколько перевел
             $table->string('name');
             $table->string('email');
 
             $table->timestamps();
+            $table->index(['email','date_from','date_to']);
 
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade');
