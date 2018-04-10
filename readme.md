@@ -22,7 +22,6 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
     
 
 # Методы Api
-**...Описать позже...**
 * Все доступны со стороны frontend'a:
    * `frontend/src/src/api/index.js`
 * Со стороны backend'a:
