@@ -1,0 +1,16 @@
+html {
+  font-family: 'Geometria';
+}
+
+body {
+  font-size: 13px;
+  line-height: 20px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.masonryContainer{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}

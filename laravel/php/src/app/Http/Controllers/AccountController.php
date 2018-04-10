@@ -6,8 +6,11 @@ use App\Service\Account\Models\UserModel;
 use App\Service\Account\Models\Wallet;
 use App\Service\ApiMethod\AccountApiMethod;
 use App\Service\ApiMethod\StatApiMethod;
+use App\Service\Stat\Models\Stat;
+use App\Service\Stat\StatService;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -28,22 +31,10 @@ class AccountController extends Controller
     {
         $users = UserModel::with('wallets')->get();
 
-
-
         return response()->json([
             'status' => 'success',
             'response' => $users
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        //
     }
 
     /**
@@ -64,17 +55,6 @@ class AccountController extends Controller
             'case' => $account->getCase(),
             'response' => $account->getMessage()
         ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-
     }
 
     /**
@@ -101,43 +81,9 @@ class AccountController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
+    public function report(StatApiMethod $statApiMethod, Request $request, string $email)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
-    }
-
-    public function report(StatApiMethod $statApiMethod, Request $request)
-    {
-        if ($statApiMethod->validateRequest($request)) {
+        if ($statApiMethod->validateRequest($request, ['email' => $email])) {
             $statApiMethod->processRequest();
         }
 
@@ -146,5 +92,24 @@ class AccountController extends Controller
             'case' => $statApiMethod->getCase(),
             'response' => $statApiMethod->getMessage()
         ]);
+    }
+
+    public function getCSV(Request $request, $statId)
+    {
+        $statService = new StatService();
+        $stat = Stat::find($statId);
+        $status = 'success';
+        try {
+            $statService->exportCSV($stat);
+            Log::info('successfully output csv');
+        } catch (\Exception $exception) {
+            Log::error('Error while output csv');
+            $status = 'error';
+
+            return response()->json([
+                'status' => $status,
+                'response' => $exception->getMessage()
+            ]);
+        }
     }
 }
