@@ -113,44 +113,44 @@ class CurrencyUpdate extends Component {
                 <Paper className="currency__paper" zDepth={2}>
                     <Subheader>Currency update (ratio for USD)</Subheader>
                     <div style={{padding: 15}}>
-                        <span>Select currency and it's ratio for USD</span>
+                        <span>Select currency and it's ratio for USD</span><br/>
                         <span>Take into consideration that <strong>exponent is fixed now. It is equal to "4".</strong><br/>
                         That means that if you want to stipulate ratio (for example) USD/RUB = 60/1:<br/>
-                        You will need to type in input 600000 (60 * 10^4) and choose "RUB" currency</span>
+                        You will need to type in input 600000 (60 * 10^4) and choose "RUB" currency</span><br/>
                         <span>This is done for the sake of keeping integer values in database even for currencies
                             (not double or float)</span>
 
                         {action === 'update' && <div>
                             <h2>Update Currency Rate For USD</h2>
-                            <TextField
+                            <div className="currency__update"><TextField
                                 hintText="Type rate to save"
                                 floatingLabelText="Insert sum in cents to enroll"
                                 type="number"
                                 onChange={this.handleChangeRate}
                                 value={rate}
-
                             />
+                                <TextField
+                                    floatingLabelText="Exponent default"
+                                    value={4}
+                                    width={100}
 
-                            <TextField
-                                floatingLabelText="Exponent default"
-                                value={4}
-                                width={100}
-
-                                disabled
-                            />
-                            <SelectField
-                                value={selectedCurrency}
-                                onChange={this.handleChangeCurrency}
-                                maxHeight={200}
-                            >
-                                {currencyItems}
-                            </SelectField>
+                                    disabled
+                                />
+                                <SelectField
+                                    hintText="Choose currency"
+                                    value={selectedCurrency}
+                                    onChange={this.handleChangeCurrency}
+                                    maxHeight={200}
+                                >
+                                    {currencyItems}
+                                </SelectField>
+                            </div>
                         </div>}
                     </div>
                     {action === 'list' && rates && Object.keys(rates).length && <CurrencyList rates={rates}/>}
                 </Paper>
 
-                <div className="currency___right">
+                <div className="currency__right">
                     <List >
                         <ListItem onClick={() => this.setState({action: 'list'})} primaryText="Currencies List"
                                   leftIcon={<ContentInbox />}/>

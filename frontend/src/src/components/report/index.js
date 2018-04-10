@@ -23,11 +23,13 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import './report.scss';
 
+import {apiPrefix} from '../../../www/etc/config.json';
+
 const style = {
     margin: 12,
 
-    tableRowColumn:{
-        padding:0
+    tableRowColumn: {
+        padding: 0
     }
 };
 class Report extends Component {
@@ -48,19 +50,19 @@ class Report extends Component {
             dateTo: maxDate,
 
             userItems: [],
-
+            errorUser: null,
             selectedUser: null,
 
             autoHideDuration: 10000,
             message: null,
             open: false,
+
+            showCsvLink: false
         };
 
     }
 
     componentDidMount() {
-
-
         if (!this.props.accounts.length) {
             this.getAccounts();
         } else {
@@ -79,7 +81,7 @@ class Report extends Component {
     };
 
     handleChangeUser = (event, index, selectedUser) => {
-        this.setState({selectedUser});
+        this.setState({errorUser: null, selectedUser, showCsvLink: false});
     };
 
     renderAccounts = () => {
@@ -101,14 +103,22 @@ class Report extends Component {
     };
 
     getReport = () => {
-        const email = this.props.accounts.find(a => a.id === this.state.selectedUser).email;
+        const user = this.props.accounts.find(a => a.id === this.state.selectedUser);
+        if (!user) {
+            this.setState({errorUser:'Choose user'})
+            return;
+        }
+
+        const {email} = user;
 
         const csv = false;
         const {dateFrom, dateTo} = this.state;
-        this.props.getReport(dateFrom, dateTo, email, csv)
-        {
 
-        }
+        this.props.getReport(dateFrom, dateTo, email, csv).then(() => {
+            const {reports} = this.props;
+            const {stat} = reports || {};
+            if (stat) setTimeout(()=>this.setState({showCsvLink: true}), 1500)
+        })
     };
 
 
@@ -121,19 +131,19 @@ class Report extends Component {
     };
 
     handleChangeFromDate = (event, dateFrom) => {
-        this.setState({dateFrom});
+        this.setState({dateFrom, showCsvLink: false});
     };
 
     handleChangeToDate = (event, dateTo) => {
-        this.setState({dateTo});
+        this.setState({dateTo, showCsvLink: false});
     };
 
-    getCsv=(statId)=> {
-        this.props.getCsv(statId).then(()=>{
+    getCsv = (statId) => {
+        this.props.getCsv(statId).then(() => {
             if (!this.props.csvError) {
-                this.setState({message:'Your csv is ready to download!', open: true})
+                this.setState({message: 'Your csv is ready to download!', open: true})
             } else {
-                this.setState({message:"NOT CSV! " + this.props.lastMsg, open: true})
+                this.setState({message: "NOT CSV! " + this.props.lastMsg, open: true})
             }
         });
 
@@ -141,7 +151,6 @@ class Report extends Component {
 
     render() {
         const {reports} = this.props;
-
 
         const {stat, stat_items} = reports || {};
 
@@ -164,6 +173,7 @@ class Report extends Component {
                         value={this.state.selectedUser}
                         onChange={this.handleChangeUser}
                         maxHeight={200}
+                        errorText={this.state.errorUser}
                     >
                         {this.state.userItems}
                     </SelectField>
@@ -176,8 +186,8 @@ class Report extends Component {
                         style={style}
                     />
 
-                    {reports && stat && <RaisedButton
-                        href={`/api/report/${stat.id}/csv`}
+                    {this.state.showCsvLink && <RaisedButton
+                        href={`${apiPrefix}/api/report/${stat.id}/csv`}
                         target="_blank"
                         secondary={true}
                         icon={<IconCSV />}
@@ -189,44 +199,44 @@ class Report extends Component {
                     <List className="report__general-list">
                         <Subheader>General Report DATA</Subheader>
                         <ListItem className="report__general-item"
-                            primaryText={stat.confirmed_amount}
-                            secondaryText="confirmed_amount"
+                                  primaryText={stat.confirmed_amount}
+                                  secondaryText="confirmed_amount"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.declined_amount}
-                            secondaryText="declined_amount"
+                                  primaryText={stat.declined_amount}
+                                  secondaryText="declined_amount"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.deposit_amount}
-                            secondaryText="deposit_amount"
+                                  primaryText={stat.deposit_amount}
+                                  secondaryText="deposit_amount"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.email}
-                            secondaryText="email"
+                                  primaryText={stat.email}
+                                  secondaryText="email"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.name}
-                            secondaryText="name"
+                                  primaryText={stat.name}
+                                  secondaryText="name"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.id}
-                            secondaryText="Stat ID"
+                                  primaryText={stat.id}
+                                  secondaryText="Stat ID"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.total_amount}
-                            secondaryText="total_amount"
+                                  primaryText={stat.total_amount}
+                                  secondaryText="total_amount"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.total_sum}
-                            secondaryText="total_sum"
+                                  primaryText={stat.total_sum}
+                                  secondaryText="total_sum"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.transfered_amount}
-                            secondaryText="transfered_amount"
+                                  primaryText={stat.transfered_amount}
+                                  secondaryText="transfered_amount"
                         />
                         <ListItem className="report__general-item"
-                            primaryText={stat.user_id}
-                            secondaryText="user_id"
+                                  primaryText={stat.user_id}
+                                  secondaryText="user_id"
                         />
                     </List>
                 </div>}
@@ -273,12 +283,16 @@ class Report extends Component {
                                         <TableRowColumn style={style.tableRowColumn}>{status}</TableRowColumn>
                                         <TableRowColumn style={style.tableRowColumn}>{created_at}</TableRowColumn>
                                         <TableRowColumn style={style.tableRowColumn}>{type}</TableRowColumn>
-                                        <TableRowColumn style={style.tableRowColumn}>{`${user_from_name} ${user_from_email}`}</TableRowColumn>
-                                        <TableRowColumn style={style.tableRowColumn}>{`${user_to_name} ${user_to_email}`}</TableRowColumn>
-                                        <TableRowColumn style={style.tableRowColumn}>{wallet_currency_code}</TableRowColumn>
+                                        <TableRowColumn
+                                            style={style.tableRowColumn}>{`${user_from_name} ${user_from_email}`}</TableRowColumn>
+                                        <TableRowColumn
+                                            style={style.tableRowColumn}>{`${user_to_name} ${user_to_email}`}</TableRowColumn>
+                                        <TableRowColumn
+                                            style={style.tableRowColumn}>{wallet_currency_code}</TableRowColumn>
                                         <TableRowColumn style={style.tableRowColumn}>{wallet_id}</TableRowColumn>
                                         <TableRowColumn style={style.tableRowColumn}>{wallet_from}</TableRowColumn>
-                                        <TableRowColumn style={style.tableRowColumn}>{wallet_from_currency}</TableRowColumn>
+                                        <TableRowColumn
+                                            style={style.tableRowColumn}>{wallet_from_currency}</TableRowColumn>
                                     </TableRow>);
                             }) : 'NO DATA'
                         }
@@ -305,8 +319,8 @@ class Report extends Component {
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getAccounts, getCsv, getReport} from '../../actions';
-const mapStateToProps = ({accountReducer: {accounts, csvError,  email, lastMsg, reports, submitted}}) => ({
-    accounts,  csvError, email, lastMsg,reports, submitted
+const mapStateToProps = ({accountReducer: {accounts, csvError, email, lastMsg, reports, submitted}}) => ({
+    accounts, csvError, email, lastMsg, reports, submitted
 });
 
 const mapDispatchToProps = (dispatch) => (bindActionCreators({getAccounts, getCsv, getReport}, dispatch));

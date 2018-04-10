@@ -1,0 +1,9 @@
+{
+    "softPrefix": "https://softmade.ru",
+    "apiPrefix": "",
+    "dbCalc":{
+        "name": "offers",
+        "host": "localhost",
+        "port": 27017
+    }
+}

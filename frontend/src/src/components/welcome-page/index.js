@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import FontIcon from 'material-ui/FontIcon';
 import MapsPersonPin from 'material-ui/svg-icons/maps/person-pin';
 import ReportIcon from 'material-ui/svg-icons/communication/business';
 import DashboardIcon from 'material-ui/svg-icons/action/dashboard';
@@ -9,6 +8,8 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import AccountPage from '../account-page';
 import CurrencyUpdate from '../currency';
 import Report from '../report';
+
+import './welcome-page.scss';
 
 class WelcomePage extends Component {
 
@@ -46,16 +47,24 @@ class WelcomePage extends Component {
 
     render() {
         return (
-            <Tabs initialSelectedIndex={0}>
+            <Tabs
+                className="welcome-page"
+                contentContainerClassName="welcome-page__tab-wrraper"
+                tabTemplateStyle={{
+                    display: 'flex',
+                    justifyContent:'center'
+                }}
+                initialSelectedIndex={2}>
                 <Tab
+                    className="welcome-page__tab"
                     icon={<DashboardIcon />}
                     index={0}
-                    label="WELCOME"
+                    label="CURRENCY"
                 >
                     <CurrencyUpdate />
-
                 </Tab>
                 <Tab
+                    className="welcome-page__tab"
                     icon={<ReportIcon />}
                     index={1}
                     label="REPORT"
@@ -63,9 +72,11 @@ class WelcomePage extends Component {
                     <Report />
                 </Tab>
                 <Tab
+                    className="welcome-page__tab"
                     icon={<MapsPersonPin />}
                     index={2}
-                    label="MY ACCOUNT">
+                    label="MY ACCOUNT"
+                >
 
                     {this.state.loading ?
                         <RefreshIndicator

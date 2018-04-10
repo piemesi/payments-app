@@ -1,9 +1,25 @@
-.wallet {
-  &__wallets-list {
+.wallet
+{
+  &__wallets-list
+  {
     display: flex;
     justify-content: flex-end;
 
     margin: 20px;
 
+  }
+  &__selects
+  {
+    display: flex;
+    align-items: center;
+  }
+
+  &__header
+  {
+    display: flex;
+    justify-content: space-between;
+    min-width: 500px;
+    max-width: 1000px;
+    align-items: center;
   }
 }

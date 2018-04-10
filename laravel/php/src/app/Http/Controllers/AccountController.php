@@ -38,6 +38,16 @@ class AccountController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        //
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param AccountApiMethod $account
@@ -55,6 +65,17 @@ class AccountController extends Controller
             'case' => $account->getCase(),
             'response' => $account->getMessage()
         ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+
     }
 
     /**
@@ -79,6 +100,40 @@ class AccountController extends Controller
             'status' => 'success',
             'response' => $account->getAccountByUser($user)
         ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $user)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
+    {
+        //
     }
 
     public function report(StatApiMethod $statApiMethod, Request $request, string $email)

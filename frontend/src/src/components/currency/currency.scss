@@ -1,5 +1,7 @@
-.currency {
-  &__list {
+.currency
+{
+  &__list
+  {
     display: flex;
     justify-content: flex-end;
 
@@ -9,7 +11,19 @@
 
   &__right
   {
-    margin-left: 50px;
+    margin-left: 30px;
     width: 200px;
   }
+  &__update
+  {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    & > div
+    {
+     margin-left: 10px;
+    }
+  }
+
 }

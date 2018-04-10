@@ -43,8 +43,8 @@ class StatService
      */
     private function checkCanStoreCache($requestData)
     {
-        $dateTo = new Carbon($requestData['date_to']);
-        return $dateTo->toDateString() < Carbon::now()->toDateString();
+        $dateTo = Carbon::createFromFormat('Y-m-d', $requestData['date_to']);
+        return $dateTo->lt(Carbon::now()->addDays(-2));
     }
 
 

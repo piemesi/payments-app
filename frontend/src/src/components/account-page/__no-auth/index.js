@@ -75,7 +75,7 @@ class NoAuth extends Component {
             <div className="account-page__no-auth">
                 <h2>Please sign in</h2>
                 <Toggle
-                    label="Register"
+                    label="Register account or create a new wallet"
                     labelPosition="right"
                     onToggle={this.toggleHandler}
                 />

@@ -55,19 +55,22 @@ class Wallet extends Component {
         const {choosenWallet, walletId} = this.state;
 
         return (
-            <div>
-                <RaisedButton
-                    label="Choose your WALLET"
-                    onClick={this.handleToggle}
-                    icon={<WalletIcon />}
-                />
+            <div className="wallet">
+                <div className="wallet__header">
+                    <RaisedButton
+                        label="Choose your WALLET"
+                        onClick={this.handleToggle}
+                        icon={<WalletIcon />}
+                    />
 
-                <strong>{`${name} ${email}`}</strong>
+                    <span>Email: <strong>{`${name} ${email}`}</strong></span>
 
-                {choosenWallet && <span>{choosenWallet.currency.code} </span>}
+                    {choosenWallet && <span>Wallet Currency: <strong>{choosenWallet.currency.code}</strong></span>}
+                </div>
 
                 {choosenWallet &&
                 <WalletChoosen
+                    logout={this.props.logout}
                     refreshWallet={this.refreshWallet}
                     wallet={choosenWallet}
                     walletId={walletId}

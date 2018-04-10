@@ -1,8 +1,14 @@
-import axios from 'axios';
-
-import {apiPrefix} from '../../etc/config.json';
-
+import axiosBase from 'axios';
+import { throttleAdapterEnhancer } from 'axios-extensions';
 import moment from 'moment';
+
+import {apiPrefix} from '../../www/etc/config.json';
+
+const axios = axiosBase.create({
+    baseURL: '/',
+    headers: { 'Cache-Control': 'no-cache' },
+    adapter: throttleAdapterEnhancer(axiosBase.defaults.adapter, 2 * 1000)
+});
 
 export default {
 

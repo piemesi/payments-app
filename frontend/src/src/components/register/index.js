@@ -40,6 +40,8 @@ class Register extends React.Component {
             message: null,
             open: false,
 
+            nextDisabled: [true, true, true]
+
         };
         this.getRegisterData();
     }
@@ -114,18 +116,24 @@ class Register extends React.Component {
     };
 
     handleChangeCountry = (event, index, selectedCountry) => {
-        this.setState({selectedCountry});
+        this.setState({
+            selectedCountry, nextDisabled: [!selectedCountry, !this.state.selectedCity, !this.state.selectedCurrency]
+        });
 
         const cities = this.props.cities.filter(c => c.country_code === selectedCountry);
         this.renderCities(cities);
     };
 
     handleChangeCurrency = (event, index, selectedCurrency) => {
-        this.setState({selectedCurrency});
+        this.setState({
+            selectedCurrency, nextDisabled: [false, false, !selectedCurrency]
+        });
     };
 
     handleChangeCity = (event, index, selectedCity) => {
-        this.setState({selectedCity});
+        this.setState({
+            selectedCity, nextDisabled: [false, !selectedCity, !this.state.selectedCurrency]
+        });
     };
 
     handleChangeName = (event) => {
@@ -150,6 +158,7 @@ class Register extends React.Component {
                         {'First of all, choose your country. You mau choose different locations and save it for' +
                         'existing email. Location and Name will be overwritten. Currency - will add for account (which ident by email)'}
                         <SelectField
+                            hintText="Select Country"
                             value={this.state.selectedCountry}
                             onChange={this.handleChangeCountry}
                             maxHeight={200}
@@ -162,8 +171,9 @@ class Register extends React.Component {
             case 1:
                 return (
                     <p>
-                        {'Choose a city of you country.'}
+                        {'Choose a city of you country.'}<br/>
                         <SelectField
+                            hintText="Choose City"
                             value={this.state.selectedCity}
                             onChange={this.handleChangeCity}
                             maxHeight={200}
@@ -195,6 +205,7 @@ class Register extends React.Component {
                         'and Wallets with new currencies, which have not been before.'}
 
                         <SelectField
+                            hintText="Select Currency"
                             value={this.state.selectedCurrency}
                             onChange={this.handleChangeCurrency}
                             maxHeight={200}
@@ -233,12 +244,12 @@ class Register extends React.Component {
 
         this.props.register(email, name, selectedCountry, selectedCity, selectedCurrency).then(() => {
             if (this.props.registered) {
-                this.setState({message:'Your account Successfully CREATED!', open: true})
+                this.setState({message: 'Your account Successfully CREATED!', open: true})
 
                 this.props.signIn(email);
                 // @chenge redirect setTimeout
             } else {
-                this.setState({message:"NOT REGISTRED!" + this.props.lastMsg, open: true})
+                this.setState({message: "NOT REGISTRED!" + this.props.lastMsg, open: true})
             }
         })
     };
@@ -282,6 +293,7 @@ class Register extends React.Component {
                     />
                     <RaisedButton
                         label={stepIndex === 2 ? 'Finish' : 'Next'}
+                        disabled={this.state.nextDisabled[stepIndex]}
                         primary={true}
                         onClick={this.handleNext}
                     />

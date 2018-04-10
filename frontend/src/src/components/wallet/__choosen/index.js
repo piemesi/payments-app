@@ -43,13 +43,13 @@ class WalletChoosen extends Component {
     componentDidMount() {
         if (!this.props.currencies.length) {
             this.getCurrencies();
-        }else{
+        } else {
             this.renderCurrencies();
         }
 
         if (!this.props.accounts.length) {
             this.getAccounts();
-        }else {
+        } else {
             this.renderAccounts();
         }
     }
@@ -199,56 +199,60 @@ class WalletChoosen extends Component {
                     {this.state.action === 'enroll' &&
                     <div style={{padding: 15}}>
                         <h2>Enroll Money</h2>
-                        <TextField
-                            hintText="Type sum to enroll"
-                            floatingLabelText="Insert sum in cents to enroll"
-                            type="number"
-                            onChange={this.handleChangeEnrollSum}
-                            value={this.state.enrollSum}
+                        <div className="wallet__selects">
+                            <TextField
+                                hintText="Type sum to enroll"
+                                floatingLabelText="Insert sum in cents to enroll"
+                                type="number"
+                                onChange={this.handleChangeEnrollSum}
+                                value={this.state.enrollSum}
 
-                        />
-                        <SelectField
-                            floatingLabelText="Choose currency to enroll"
-                            value={this.state.selectedCurrency}
-                            onChange={this.handleChangeCurrency}
-                            maxHeight={200}
-                        >
-                            {this.state.currencyItems}
-                        </SelectField>
+                            />
+                            <SelectField
+                                floatingLabelText="Choose currency to enroll"
+                                value={this.state.selectedCurrency}
+                                onChange={this.handleChangeCurrency}
+                                maxHeight={200}
+                            >
+                                {this.state.currencyItems}
+                            </SelectField>
+                        </div>
                     </div>}
                     {this.state.action === 'transfer' &&
                     <div style={{padding: 15}}>
                         <Divider inset/>
                         <h2>Transfer money for</h2>
-                        <SelectField
-                            floatingLabelText="Choose user to transfer"
-                            value={this.state.selectedUser}
-                            onChange={this.handleChangeUser}
-                            maxHeight={200}
-                        >
-                            {this.state.userItems}
-                        </SelectField>
-                        <SelectField
-                            hintText="User Wallet"
-                            floatingLabelText="Choose user' Wallet (!) to transfer"
-                            value={this.state.selectedWallet}
-                            onChange={this.handleChangeWallet}
-                            maxHeight={200}
-                        >
-                            {this.state.walletItems}
-                        </SelectField>
-                        <TextField
-                            hintText="Type sum to transfer"
-                            floatingLabelText={"Insert sum in cents to transfer"}
-                            type="number"
-                            onChange={this.handleChangeTransferSum}
-                            value={this.state.transferSum}
+                        <div className="wallet__selects">
+                            <SelectField
+                                floatingLabelText="Choose user to transfer"
+                                value={this.state.selectedUser}
+                                onChange={this.handleChangeUser}
+                                maxHeight={200}
+                            >
+                                {this.state.userItems}
+                            </SelectField>
+                            <SelectField
+                                hintText="User Wallet"
+                                floatingLabelText="Choose user' Wallet (!) to transfer"
+                                value={this.state.selectedWallet}
+                                onChange={this.handleChangeWallet}
+                                maxHeight={200}
+                            >
+                                {this.state.walletItems}
+                            </SelectField>
+                            <TextField
+                                hintText="Type sum to transfer"
+                                floatingLabelText={"Insert sum in cents to transfer"}
+                                type="number"
+                                onChange={this.handleChangeTransferSum}
+                                value={this.state.transferSum}
 
-                        />
+                            />
+                        </div>
                     </div>
                     }
                 </Paper>
-                <div className="wallet___right">
+                <div className="wallet__right">
                     <List >
                         <ListItem onClick={() => this.setState({action: 'enroll'})} primaryText="Enroll"
                                   leftIcon={<ContentInbox />}/>
@@ -274,6 +278,13 @@ class WalletChoosen extends Component {
                             icon={<ContentSend />}
                         />}
                     </List>
+                    <Divider />
+                    <RaisedButton
+                        style={{marginBottom: '50px', width: '100%', top: 0}}
+                        label="logOut"
+                        onClick={this.props.logout}
+                        icon={<WalletIcon />}
+                    />
                 </div>
 
                 <Snackbar
