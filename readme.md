@@ -3,7 +3,7 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 
 **...Описание будет обновляться...**
 
-#Сервисы:
+# Сервисы:
 * backend:
     * nginx для php
     * superivisor (установаливается при `docker-compose up --build` и запускается вместе с контейнеров backend.php)
@@ -18,29 +18,13 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * nginx 
     * nginx для laravel
     * общий балансер (например, для масштабирования микросервисной архитекруры)
-
-#Запуск задания для разработки:
-* для работы с проектом необходимо получить этот репозиторий и поднять сервисы через `docker-compose`
-* запуск через `docker-compose` (возможны нюансы, но при корректных .env, свободных портов - должно подниматься):
-    * поднимаются laravel (php + nginx)
-    * postgres
-    * redis
-    * balancer (nginx)
-    * _Возможно, включить и `frontend` сразу для поднятия в контейнере_ (как пример секция в docker-compose и в файлу frontend/Dockerfile)
-* при запуске через docker-compose необходимо создать сеть:
-    * `docker create paymentsnet` - create network for payments app
-* при запуске выполняются установка зависимостей композера, накатываются миграции (всю структуру базы можно посмотреть в них - см. пункт База)
-* backend поднимается на :85 порту 
-* фронтенд запускается `cd frontend/src && npm i` - и после - `npm start`
-    * поднимается на порте :3050 (см. frontend/src/webpack-dev-server.config.js)
-* сборка билда (не для разработки) фронтенда осуществляется: `cd frontend/src && webpack` -> создается папка build/ (в frontend/src)
-    * ассеты (js,css) из сформированной папки - сейчас просто переносятся в welcome.blade.php в laravel (опять же - можно оптимизировать - переносить при сборке)
     
 
-#Методы Api
+# Методы Api
 **...Описать позже...**
 
-#DB
+
+# DB
 * вся структура db накатывается миграциями (`laravel/src/database/migrations`)
 * также при запуске контейнера backend.php (`laravel/php/Dockerfile`) накатываются необходимые фикстуры данных:
     * `php artisan db:seed`
@@ -65,9 +49,9 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
     * у пользователя может быть несколько кошельков
     
     
-#Структура проекта/сервисов
-###Frontend
+# Структура проекта/сервисов
 ![db tables](http://task.softmade.ru/frontend.png)
+### Frontend
     * настройка локальной сборки с (Hot Module Replacement) в webpack-dev-server
     * продакшн - webpack
     * в папке **www** -> ассеты и индекс пейдж для локальной работы
@@ -81,7 +65,10 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
         * в папке components -> компоненты:
             * стремление к BEMу (тут не сильно видно) - архитекутра стилей компонентов 
             * сами компоненты, говорящие за себя -> account-page, currency, register, report, wallet, welcome-page 
-###Backend
+
+           
+![db tables](http://task.softmade.ru/services.png)    
+### Backend
     * Laravel 5.6
     * Все роуты(методы апи) в `routes/api`
     * миграции и фикстуры (database/migrations ../seeds)
@@ -101,11 +88,27 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * **`/Laravel/php/src/app/Service`**
         
        * Там - сервисы и их модели
+       
     
-            
-![db tables](http://task.softmade.ru/services.png)     
-    
-    
+
+# Запуск задания для разработки:
+* для работы с проектом необходимо получить этот репозиторий и поднять сервисы через `docker-compose`
+* запуск через `docker-compose` (возможны нюансы, но при корректных .env, свободных портов - должно подниматься):
+    * поднимаются laravel (php + nginx)
+    * postgres
+    * redis
+    * balancer (nginx)
+    * _Возможно, включить и `frontend` сразу для поднятия в контейнере_ (как пример секция в docker-compose и в файлу frontend/Dockerfile)
+* при запуске через docker-compose необходимо создать сеть:
+    * `docker create paymentsnet` - create network for payments app
+* при запуске выполняются установка зависимостей композера, накатываются миграции (всю структуру базы можно посмотреть в них - см. пункт База)
+* backend поднимается на :85 порту 
+* фронтенд запускается `cd frontend/src && npm i` - и после - `npm start`
+    * поднимается на порте :3050 (см. frontend/src/webpack-dev-server.config.js)
+* сборка билда (не для разработки) фронтенда осуществляется: `cd frontend/src && webpack` -> создается папка build/ (в frontend/src)
+    * ассеты (js,css) из сформированной папки - сейчас просто переносятся в welcome.blade.php в laravel (опять же - можно оптимизировать - переносить при сборке)
+
+
     
 **Примечание:**
 Можно дорабатывать бесконечно долго. 
@@ -115,5 +118,5 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * в ближайшие дни на неделе в свободное время поправлю, чтобы там можно было проверить весь фукнционал. 
     По самому коду, принципиально уже ничего не измениться. Его можно смотреть. Как донастрою демо - напишу.
     
-    ####Спасиб за внимание!
+    #### Спасиб за внимание!
  
