@@ -114,6 +114,17 @@
   display: flex;
   justify-content: flex-end;
   margin: 20px; }
+
+.wallet__selects {
+  display: flex;
+  align-items: center; }
+
+.wallet__header {
+  display: flex;
+  justify-content: space-between;
+  min-width: 500px;
+  max-width: 1000px;
+  align-items: center; }
 .account-page__sign-in {
   display: flex;
   flex-direction: column;
@@ -130,8 +141,15 @@
   margin: 20px; }
 
 .currency__right {
-  margin-left: 50px;
+  margin-left: 30px;
   width: 200px; }
+
+.currency__update {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between; }
+  .currency__update > div {
+    margin-left: 10px; }
 .report__filter {
   display: flex;
   flex-wrap: wrap;
@@ -145,5 +163,7 @@
   max-width: 200px; }
   .report__general-item > div > div {
     padding: 2px; }
+.welcome-page__tab-wrraper {
+  padding: 0px 20px; }
 
-/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnVuZGxlLmNzcyIsInNvdXJjZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OyIsInNvdXJjZVJvb3QiOiIifQ==*/
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnVuZGxlLmNzcyIsInNvdXJjZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Iiwic291cmNlUm9vdCI6IiJ9*/
