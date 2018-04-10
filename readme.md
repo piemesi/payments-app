@@ -15,6 +15,7 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * frontend:
     * webpack, react, redux
 * postgres
+* redis
 * nginx 
     * nginx для laravel
     * общий балансер (например, для масштабирования микросервисной архитекруры)
