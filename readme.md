@@ -3,6 +3,9 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 
 **...Описание будет обновляться...**
 
+Demo: 
+   * http://task.softmade.ru
+
 # Сервисы:
 * backend:
     * nginx для php
@@ -27,6 +30,7 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * Со стороны backend'a:
    * `laravel/php/src/routes/api.php`
 * `Content/type: application/json`
+* Демо `apiPrefix` = http://task.softmade.ru
 * Список:
    * get(`${apiPrefix}/api/account/`); // получение списка аккаунтов пользователей (users+wallets)
    * get(`${apiPrefix}/api/countries/`); // 
