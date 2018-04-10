@@ -3,7 +3,10 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 
 **...Описание будет обновляться...**
 
-#Сервисы:
+Demo: 
+   * http://task.softmade.ru
+
+# Сервисы:
 * backend:
     * nginx для php
     * superivisor (установаливается при `docker-compose up --build` и запускается вместе с контейнеров backend.php)
@@ -15,32 +18,36 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * frontend:
     * webpack, react, redux
 * postgres
+* redis
 * nginx 
     * nginx для laravel
     * общий балансер (например, для масштабирования микросервисной архитекруры)
-
-#Запуск задания для разработки:
-* для работы с проектом необходимо получить этот репозиторий и поднять сервисы через `docker-compose`
-* запуск через `docker-compose` (возможны нюансы, но при корректных .env, свободных портов - должно подниматься):
-    * поднимаются laravel (php + nginx)
-    * postgres
-    * redis
-    * balancer (nginx)
-    * _Возможно, включить и `frontend` сразу для поднятия в контейнере_ (как пример секция в docker-compose и в файлу frontend/Dockerfile)
-* при запуске через docker-compose необходимо создать сеть:
-    * `docker create paymentsnet` - create network for payments app
-* при запуске выполняются установка зависимостей композера, накатываются миграции (всю структуру базы можно посмотреть в них - см. пункт База)
-* backend поднимается на :85 порту 
-* фронтенд запускается `cd frontend/src && npm i` - и после - `npm start`
-    * поднимается на порте :3050 (см. frontend/src/webpack-dev-server.config.js)
-* сборка билда (не для разработки) фронтенда осуществляется: `cd frontend/src && webpack` -> создается папка build/ (в frontend/src)
-    * ассеты (js,css) из сформированной папки - сейчас просто переносятся в welcome.blade.php в laravel (опять же - можно оптимизировать - переносить при сборке)
     
 
-#Методы Api
-**...Описать позже...**
+# Методы Api
+* Все доступны со стороны frontend'a:
+   * `frontend/src/src/api/index.js`
+* Со стороны backend'a:
+   * `laravel/php/src/routes/api.php`
+* `Content/type: application/json`
+* Демо `apiPrefix` = http://task.softmade.ru
+* Список:
+   * get(`${apiPrefix}/api/account/`); // получение списка аккаунтов пользователей (users+wallets)
+   * get(`${apiPrefix}/api/countries/`); // 
+   * get(`${apiPrefix}/api/cities/`); 
+   * get(`${apiPrefix}/api/currencies/`); // список доступных валют
+   * get(`${apiPrefix}/api/currency-rate/`); // список соотношения валют к доллару (группировка последнего сохраненного по каждой валюте
+   * get(`${apiPrefix}/api/report/${statId}/csv`); // получение csv по сформированному отчету (statId) - см. следующий запрос
+   * get(`${apiPrefix}/api/account/${email}/report/?${addParams.join('&')}`, {date_from, date_to}); // формирования отчета по указанным параметрам
+   * get(`${apiPrefix}/api/account/${email}/check`); // получение аккаунта по email (user+wallets)
+   * post(`${apiPrefix}/api/account/`, data); // создание аккаунта (users+wallets) на основе параметров: {name[string], country_code[ex:"RUS"], city_id[int], currency_code[ex:"USD"], email, password[12345]). Если пользователь с таким email уже есть -> проверяется наличие соответствующего у него кошелька с указанной валютой - если нет -> создается соотвтетствующий кошелек.
+   * post(`${apiPrefix}/api/transaction/`, data);
+      * submitEnroll: {"wallet_to":INT,"amount_from":"100000","currency_from":"RUB"} // зачисление/снятие
+      * submitTransfer: {"wallet_to":INT,"wallet_from":INT,"amount_from":INT} // перевод с кошелька на кошелек
+   * post(`${apiPrefix}/api/currency-rate/`, data); // обновление котировок валют (сейчас все к USD) `{"currency_from":"RUB",	"source": "CBR","rate":600000,"exponent":INT[default=4]}` exponent'a нужна чтобы хранить котировки в базе как целые числа (rate делиться на 10 в указаной степени [exponent])
 
-#DB
+
+# DB
 * вся структура db накатывается миграциями (`laravel/src/database/migrations`)
 * также при запуске контейнера backend.php (`laravel/php/Dockerfile`) накатываются необходимые фикстуры данных:
     * `php artisan db:seed`
@@ -65,11 +72,11 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
     * у пользователя может быть несколько кошельков
     
     
-#Структура проекта/сервисов
-###Frontend
+# Структура проекта/сервисов
 ![db tables](http://task.softmade.ru/frontend.png)
-    * настройка локальной сборки с (Hot Module Replacement) в webpack-dev-server
-    * продакшн - webpack
+### Frontend
+    * настройка локальной сборки с (Hot Module Replacement) в `frontend/src/webpack-dev-server.config.js`
+    * продакшн - `frontend/src/webpack.config.js`
     * в папке **www** -> ассеты и индекс пейдж для локальной работы
     * в node_modules -> результат `npm i` аКа `npm install` - можно `yarn install` - необходимые зависисмости
     * в папке **build/** -> результат продакшн сборки (`webpack`)
@@ -79,9 +86,13 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
             * accountReducer, currencyReducer, registerReducer, transactionReducer
         * в папке routing -> инитный сыроватый роутинг.
         * в папке components -> компоненты:
-            * стремление к BEMу (тут не сильно видно) - архитекутра стилей компонентов 
+            * стремление к BEMу (тут не сильно видно) - архитекутра стилей компонентов [BEM-методология](http://task.softmade.ru/frontend.png)
             * сами компоненты, говорящие за себя -> account-page, currency, register, report, wallet, welcome-page 
-###Backend
+    * Дизайн: использовалась бибилиотека material-ui реализация концепцию material дезайна
+
+           
+![db tables](http://task.softmade.ru/services.png)    
+### Backend
     * Laravel 5.6
     * Все роуты(методы апи) в `routes/api`
     * миграции и фикстуры (database/migrations ../seeds)
@@ -101,11 +112,27 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * **`/Laravel/php/src/app/Service`**
         
        * Там - сервисы и их модели
+       
     
-            
-![db tables](http://task.softmade.ru/services.png)     
-    
-    
+
+# Запуск задания для разработки:
+* для работы с проектом необходимо получить этот репозиторий и поднять сервисы через `docker-compose`
+* запуск через `docker-compose` (возможны нюансы, но при корректных .env, свободных портов - должно подниматься):
+    * поднимаются laravel (php + nginx)
+    * postgres
+    * redis
+    * balancer (nginx)
+    * _Возможно, включить и `frontend` сразу для поднятия в контейнере_ (как пример секция в docker-compose и в файлу frontend/Dockerfile)
+* при запуске через docker-compose необходимо создать сеть:
+    * `docker create paymentsnet` - create network for payments app
+* при запуске выполняются установка зависимостей композера, накатываются миграции (всю структуру базы можно посмотреть в них - см. пункт База)
+* backend поднимается на :85 порту 
+* фронтенд запускается `cd frontend/src && npm i` - и после - `npm start`
+    * поднимается на порте :3050 (см. frontend/src/webpack-dev-server.config.js)
+* сборка билда (не для разработки) фронтенда осуществляется: `cd frontend/src && webpack` -> создается папка build/ (в frontend/src)
+    * ассеты (js,css) из сформированной папки - сейчас просто переносятся в welcome.blade.php в laravel (опять же - можно оптимизировать - переносить при сборке)
+
+
     
 **Примечание:**
 Можно дорабатывать бесконечно долго. 
@@ -115,5 +142,5 @@ _by_ **Alexey Gaynulin** _(a@gaynulin.ru)_
 * в ближайшие дни на неделе в свободное время поправлю, чтобы там можно было проверить весь фукнционал. 
     По самому коду, принципиально уже ничего не измениться. Его можно смотреть. Как донастрою демо - напишу.
     
-    ####Спасиб за внимание!
+    #### Спасиб за внимание!
  
